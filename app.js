@@ -18,7 +18,7 @@ data.db.authenticate().then(() => {
 });
 
 app.get("/", (req, res) => {
-  res.send(layout(""));
+  res.redirect("/wiki");
 });
 
 const init = async () => {
