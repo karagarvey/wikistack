@@ -1,7 +1,12 @@
 const Sequelize = require("sequelize");
-const db = new Sequelize("postgres://localhost:5432/wikistack",{
+const db = new Sequelize("postgres://localhost:5432/wikistack", {
   logging: false
 });
+
+function generateSlug (title) {
+
+  return title.replace(/\s+/g, '_').replace(/\W/g, '');
+}
 
 const Page = db.define("page", {
   title: {
@@ -12,7 +17,7 @@ const Page = db.define("page", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isAlphanumeric: true,
+      isAlphanumeric: true
     }
   },
   content: {
@@ -21,9 +26,13 @@ const Page = db.define("page", {
   },
   type: {
     type: Sequelize.ENUM("open", "closed"),
-    defaultValue: 'closed'
+    defaultValue: "closed"
   }
-});
+}, {
+  hooks: {
+    beforeValidate: (page, options) => {
+      page.slug = 'happy';
+    }});
 
 const User = db.define("user", {
   name: {
@@ -34,7 +43,7 @@ const User = db.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmail: true,
+      isEmail: true
     }
   }
 });
