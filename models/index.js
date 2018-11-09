@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const db = new Sequelize('postgres://localhost:5432/wikistack');
+const Sequelize = require("sequelize");
+const db = new Sequelize("postgres://localhost:5432/wikistack");
 
-const Page = db.define('page', {
+const Page = db.define("page", {
   title: Sequelize.STRING,
   slug: {
     type: Sequelize.STRING,
@@ -10,10 +10,10 @@ const Page = db.define('page', {
     }
   },
   content: Sequelize.STRING,
-  status: Sequelize.STRING
-})
+  type: Sequelize.ENUM("open", "closed")
+});
 
-const User = db.define('user', {
+const User = db.define("user", {
   name: Sequelize.STRING,
   email: {
     type: Sequelize.STRING,
@@ -21,9 +21,6 @@ const User = db.define('user', {
       isEmail: true
     }
   }
-})
+});
 
-
-module.exports = {
-  db
-}
+module.exports = { db, Page, User };
