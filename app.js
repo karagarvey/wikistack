@@ -3,10 +3,13 @@ const morgan = require("morgan");
 const app = express();
 const layout = require("./views/layout.js");
 const data = require("./models");
+const userRouter = require("./routes/user.js");
+const wikiRouter = require("./routes/wiki.js");
 // console.log(data.db);
 
 app.use(express.urlencoded({ extended: false }));
-
+app.use("/wiki", wikiRouter);
+app.use("/user", userRouter);
 app.use(morgan("dev"));
 app.use(express.static(__dirname + "/public"));
 
