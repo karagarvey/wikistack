@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const app = express();
 const layout = require("./views/layout.js");
 const data = require("./models");
-console.log(data.db);
+// console.log(data.db);
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -18,7 +18,13 @@ app.get("/", (req, res) => {
   res.send(layout(""));
 });
 
-const port = 8080;
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+const init = async () => {
+  await data.db.sync()
+
+  const port = 8080;
+  app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
+}
+
+init()
