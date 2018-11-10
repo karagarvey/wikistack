@@ -3,10 +3,7 @@ const db = new Sequelize("postgres://localhost:5432/wikistack", {
   logging: false
 });
 
-function generateSlug (title) {
-
-  return title.replace(/\s+/g, '_').replace(/\W/g, '');
-}
+const SequelizeSlugify = require("sequelize-slugify");
 
 const Page = db.define("page", {
   title: {
@@ -15,25 +12,18 @@ const Page = db.define("page", {
   },
   slug: {
     type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      isAlphanumeric: true
-    }
+    unique: true
   },
   content: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  type: {
-    type: Sequelize.ENUM("open", "closed"),
-    defaultValue: "closed"
-  }
-}, {
-  hooks: {
-    beforeValidate: (page, options) => {
-      page.slug = 'happy';
-    }});
+  type: Sequelize.ENUM("open", "closed")
+});
 
+SequelizeSlugify.slugifyModel(Page, {
+  source: ["title"]
+});
 const User = db.define("user", {
   name: {
     type: Sequelize.STRING,
@@ -47,5 +37,7 @@ const User = db.define("user", {
     }
   }
 });
+
+Page.belongsTo(User, { as: "author" });
 
 module.exports = { db, Page, User };
